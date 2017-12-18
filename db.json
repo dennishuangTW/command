@@ -1,0 +1,19 @@
+{
+  "command": [
+    {
+      "name": "test",
+      "path": "C:/Users/user/Documents/HTML/fivefields/",
+      "status": "0"
+    },
+    {
+      "name": "test2",
+      "path": "123",
+      "status": "0"
+    },
+    {
+      "name": "wpg_dada",
+      "path": "C:\\Users\\user\\Documents\\HTML\\wpg_ec",
+      "status": "0"
+    }
+  ]
+}
