@@ -3,24 +3,18 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const router = require('express').Router();
-const gulp = require('./cmdModule');
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync')
-const adapter = new FileSync('db.json')
-const db = low(adapter)
-const shortid = require('shortid')
+const gulp = require('./route/runGulp');
+const CommandModel = require('./models/CommandModel');
 
 
 //setting
 app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');   
 app.io = io;
-app.db = db;
 server.listen(3000);
 
 
-db.defaults({ command : [] })
-  .write()
+
 
 //sockect test
 io.on('connection', function(socket) {
@@ -41,51 +35,30 @@ io.on('connection', function(socket) {
 //Route
 app.use('/gulp', gulp);
 app.get('/',function(req,res){
-	res.render('template',{
-		title: '監聽',
-		console_name : ''
-	});
+	res.redirect('/gulp/show_list')
 });
 
 
 
 app.get('/update/:name',function(req,res){
-
-   if(db.isEmpty('name',req.params.name)){
-      db.get('command').push(
-         {
-            name : req.params.name,
-            path : req.query.path,
-            status : '0'
-         }
-      )
-      .write();
-   }
-   else{
-      db.get('command')
-      .find({ name:  req.params.name})
-      .assign(
-         { 
-            path : req.query.path
-         }
-      )
-      .write()
+   name = req.params.name;
+   path = req.query.path;
+   update_obj = {
+      name,
+      path,
+      status : '0'
 
    }
+   CommandModel.update(update_obj);
 });
 
 
 
 app.use(function(req, res){
-   res.sendStatus(404);
+  res.redirect('/gulp/show_list')
 });
 
 
 
 
 
-db.isEmpty = function(colomn,value){
-   let temp_obj = {};
-   temp_obj[colomn] = value;
-   return (db.get('command').find(temp_obj).value() === undefined);
-}

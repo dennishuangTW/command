@@ -7,12 +7,22 @@
     },
     {
       "name": "test2",
-      "path": "123",
-      "status": "0"
+      "path": "C:\\Users\\user\\Documents\\HTML\\wpg_ec",
+      "status": "1"
     },
     {
       "name": "wpg_dada",
       "path": "C:\\Users\\user\\Documents\\HTML\\wpg_ec",
+      "status": "1"
+    },
+    {
+      "name": "test1212",
+      "path": "123",
+      "status": "0"
+    },
+    {
+      "name": "test1545454",
+      "path": "5544",
       "status": "0"
     }
   ]
