@@ -1,0 +1,29 @@
+{
+  "name": "command",
+  "version": "1.0.0",
+  "description": "command manage interface",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "iconv-lite": "^0.4.19",
+    "lowdb": "^1.0.0",
+    "node-datetime": "^2.0.3",
+    "socket.io": "^2.0.4",
+    "shortid": "^2.2.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dennishuangTW/command.git"
+  },
+  "author": "DennisHuang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dennishuangTW/command/issues"
+  },
+  "homepage": "https://github.com/dennishuangTW/command#readme"
+}

@@ -1,9 +1,14 @@
 <!DOCTYPE html>  
 <html>  
 <head>  
-<meta charset="utf-8">  
-<title>實作EJS</title>  
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<meta charset="utf-8">  
+	<title>實作EJS</title>  
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<style type="text/css">
+		th{
+			text-align: left;
+		}
+	</style>
 </head>  
 <body>  
 <div id="app">
@@ -20,14 +25,15 @@
 				<td>{{ command.name }}</td>
 				<td>{{ command.path }}</td>
 				<td>{{ command.status }}</td>
-				<td v-if="command.status == '0' ">
-					<a :href="'/gulp/run/'+ command.name">run</a>
-				</td>
-				<td v-if="command.status != '0' ">
-					<a :href="'/gulp/stop/' +  command.name ">stop</a>
+				<td>
+					<a :href="'/run/'+ command.name" v-if="command.status == '0' ">run</a>
+					<a :href="'/stop/'+ command.name" v-if="command.status != '0' ">stop</a>
 				</td>
 				<td>
-					<a :href="'/gulp/monitor/' +  command.name ">Enter</a>
+					<a :href="'/monitor/' +  command.name ">Enter</a>
+				</td>
+				<td>
+					<a :href="'/delete/'+ command.name">delete</a>
 				</td>
 			</tr>
 		</tbody>

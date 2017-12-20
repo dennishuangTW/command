@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var child_process = require('child_process');
-var iconv = require('iconv-lite');
-//var encoding = 'cp950'; // command line encode
-var encoding = 'utf8'; // command line encode
-var binaryEncoding = 'binary';
-var time = require('node-datetime');
-var child_process_arr = [];
-var command = 'gulp sass:watch';
+const express = require('express');
+const router = express.Router();
+const child_process = require('child_process');
+const iconv = require('iconv-lite');
+//const encoding = 'cp950'; // command line encode
+const encoding = 'utf8'; // command line encode
+const binaryEncoding = 'binary';
+const time = require('node-datetime');
+const child_process_arr = [];
+const command = 'gulp sass:watch';
 const CommandModel = require('../models/CommandModel');
 
 
@@ -105,12 +105,34 @@ router.get('/monitor/:name', function (req, res) {
 // define the about route
 router.get('/show_list', function (req, res) {
 	command_list = CommandModel.getList();
-	console.log(command_list);
 	res.render('show_list',{
 		data : command_list
 	})
 	
 })
+
+router.get('/delete/:name', function (req, res) {
+	let name = req.params.name.trim();
+	CommandModel.deleteByName(name);
+	res.redirect('/gulp/show_list'); 	
+})
+
+
+
+router.get('/update/:name',function(req,res){
+	res.render('update_command_view',{
+		
+	});
+   name = req.params.name;
+   path = req.query.path;
+   update_obj = {
+      name,
+      path,
+      status : '0'
+
+   }
+   CommandModel.update(update_obj);
+});
 
 
 

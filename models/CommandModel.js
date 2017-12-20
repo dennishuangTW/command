@@ -25,6 +25,12 @@ exports.getList = function(){
 	return	command_table.value();
 }
 
+exports.deleteByName = function(name){
+   command_table
+   .remove({ name })
+   .write();
+}
+
 
 
 

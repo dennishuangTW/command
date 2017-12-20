@@ -33,29 +33,15 @@ io.on('connection', function(socket) {
 
 
 //Route
-app.use('/gulp', gulp);
-app.get('/',function(req,res){
-	res.redirect('/gulp/show_list')
-});
+app.use('/', gulp);
 
 
 
-app.get('/update/:name',function(req,res){
-   name = req.params.name;
-   path = req.query.path;
-   update_obj = {
-      name,
-      path,
-      status : '0'
-
-   }
-   CommandModel.update(update_obj);
-});
 
 
 
 app.use(function(req, res){
-  res.redirect('/gulp/show_list')
+  res.redirect('/show_list')
 });
 
 
