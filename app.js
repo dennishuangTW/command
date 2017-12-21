@@ -12,9 +12,8 @@ app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');   
 app.io = io;
 server.listen(3000);
-
-
-
+app.locals.baseUrl = "192.168.3.36:3000";
+app.locals.siteName = "Command Panel";
 
 //sockect test
 io.on('connection', function(socket) {
@@ -36,11 +35,8 @@ io.on('connection', function(socket) {
 app.use('/', gulp);
 
 
-
-
-
-
 app.use(function(req, res){
+   console.log(req.app.locals.baseUrl);
   res.redirect('/show_list')
 });
 

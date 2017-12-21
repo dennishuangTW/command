@@ -1,46 +1,39 @@
-<!DOCTYPE html>  
-<html>  
-<head>  
-	<meta charset="utf-8">  
-	<title>實作EJS</title>  
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<style type="text/css">
-		th{
-			text-align: left;
-		}
-	</style>
-</head>  
-<body>  
+<% include partial/header %>
+
 <div id="app">
-	<table>
-		<thead>
-			<th>Name</th>
-			<th>Path</th>
-			<th>Status</th>
-			<th>Action</th>
-			<th>Monitor</th>
-		</thead>
-		<tbody>
-			<tr v-for="command in command_list">
-				<td>{{ command.name }}</td>
-				<td>{{ command.path }}</td>
-				<td>{{ command.status }}</td>
-				<td>
-					<a :href="'/run/'+ command.name" v-if="command.status == '0' ">run</a>
-					<a :href="'/stop/'+ command.name" v-if="command.status != '0' ">stop</a>
-				</td>
-				<td>
-					<a :href="'/monitor/' +  command.name ">Enter</a>
-				</td>
-				<td>
-					<a :href="'/delete/'+ command.name">delete</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="container">
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<th>Name</th>
+					<th>Path</th>
+					<th>Status</th>
+					<th>Action</th>
+					<th>Monitor</th>
+					<th>Delete</th>
+				</thead>
+				<tbody>
+					<tr v-for="command in command_list">
+						<td>{{ command.name }}</td>
+						<td>{{ command.path }}</td>
+						<td>{{ command.status }}</td>
+						<td>
+							<a :href="'/run/'+ command.name" v-if="command.status == '0' ">run</a>
+							<a :href="'/stop/'+ command.name" v-if="command.status != '0' ">stop</a>
+						</td>
+						<td>
+							<a :href="'/monitor/' +  command.name ">Enter</a>
+						</td>
+						<td>
+							<a :href="'/delete/'+ command.name">X</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	
 </div> 
-</body> 
 <script type="text/javascript">
 	var app = new Vue({
 	  	el: '#app',
@@ -49,4 +42,6 @@
 	  	}
 	});
 </script>
-</html>  
+
+
+<% include partial/footer %>

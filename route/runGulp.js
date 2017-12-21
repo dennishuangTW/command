@@ -20,7 +20,10 @@ router.use(function timeLog (req, res, next) {
 router.get('/run/:name', function (req, res, next) {
 	var name = req.params.name;
 	command_obj = CommandModel.getValueByName(name);
-
+	req.app.io.emit('update_status_'+name,
+   	{
+   		'status': 1
+   	});
  	if(typeof child_process_arr[name] === 'undefined') {
 		child_process_arr[name] =  child_process.exec(command, {cwd : command_obj.path, encoding: binaryEncoding });
 		CommandModel.update({
@@ -65,37 +68,31 @@ router.get('/run/:name', function (req, res, next) {
 	res.redirect('/gulp/show_list');
 })
 
+
+
 router.get('/stop/:name', function (req, res, next) {
 	var name = req.params.name;
-  	var isWin = /^win/.test(process.platform);
-
-  	if(child_process_arr[name] && child_process_arr[name].pid){		
-  		if(!isWin) {
-		    kill(child_process_arr[name].pid);
-		} else {
-		    var kill = child_process.exec('taskkill /PID ' + child_process_arr[name].pid + ' /T /F');             
-		}
-  	}
-  	if(child_process_arr[name]){
-		delete child_process_arr[name];
-  	}
-	CommandModel.update({
-		name,
-		status : '0'
-	});
-    console.log('delete success');
+	stopCommand(name);
+	req.app.io.emit('update_status_'+name,
+   	{
+   		'status': 0
+   	});
 	res.redirect('/gulp/show_list');
 
 })
 
 
-router.get('/monitor/:name', function (req, res) {
+router.get('/monitor/:name', function (req, res, next) {
 	var name = req.params.name;
-	var path = req.query.path;
-
-	res.render('template',{
+	command_data = CommandModel.getValueByName(name);
+	if(CommandModel.isEmptyByName(name)){
+		res.redirect('/');
+		next();
+	}
+	res.render('console_view',{
 		title: '監聽',
-		console_name : name
+		console_name : name,
+		status : command_data.status
 	});
 
 })
@@ -108,30 +105,39 @@ router.get('/show_list', function (req, res) {
 	res.render('show_list',{
 		data : command_list
 	})
+
 	
 })
 
 router.get('/delete/:name', function (req, res) {
+
 	let name = req.params.name.trim();
+	stopCommand(name);
 	CommandModel.deleteByName(name);
-	res.redirect('/gulp/show_list'); 	
+	req.app.io.emit('update_status_'+name,
+   	{
+   		'status': 0
+   	});
+	res.redirect('/gulp/show_list'); 
+
 })
 
 
 
 router.get('/update/:name',function(req,res){
-	res.render('update_command_view',{
+	// res.render('update_command_view',{
 		
-	});
-   name = req.params.name;
-   path = req.query.path;
-   update_obj = {
-      name,
-      path,
-      status : '0'
+	// });
+   	name = req.params.name;
+   	path = req.query.path;
+   	update_obj = {
+      	name,
+      	path,
+      	status : '0'
 
-   }
-   CommandModel.update(update_obj);
+   	}
+   	CommandModel.update(update_obj);
+   	res.redirect('/show_list');
 });
 
 
@@ -159,9 +165,30 @@ var kill = function (pid, signal, callback) {
     }
 };
 
+var stopCommand = function(name){
+	var isWin = /^win/.test(process.platform);
+
+  	if(child_process_arr[name] && child_process_arr[name].pid){		
+  		if(!isWin) {
+		    kill(child_process_arr[name].pid);
+		} else {
+		    var kill = child_process.exec('taskkill /PID ' + child_process_arr[name].pid + ' /T /F');             
+		}
+  	}
+  	if(child_process_arr[name]){
+		delete child_process_arr[name];
+  	}
+	CommandModel.update({
+		name,
+		status : '0'
+	});
+}
+
+
+
+
 
 // middleware that is specific to this router
 
 
 module.exports = router;
-

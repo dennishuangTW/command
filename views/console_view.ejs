@@ -1,0 +1,100 @@
+
+<% include partial/header %>
+
+<style>
+	
+.console {
+  font-family: 'Fira Mono';
+  width: 700px;
+  height: 450px;
+  box-sizing: border-box;
+  margin: auto;
+  font-size: 16px;
+}
+
+.console .consolehead {
+	border-top-left-radius: 5px;
+  	border-top-right-radius: 5px;
+  	background-color: #555;
+  	height: 45px;
+  	line-height: 45px;
+  	text-align: center;
+  	color: #DDD;
+  	position: relative;
+}
+
+.console .consolebody {
+  	border-bottom-left-radius: 5px;
+  	border-bottom-right-radius: 5px;
+  	box-sizing: border-box;
+  	padding: 20px;
+  	height: calc(100% - 40px);
+  	overflow-y: auto;
+  	background-color: #000;
+  	color: #63de00;
+}
+
+.console .consolebody p {
+  	line-height: 1.5rem;
+}
+.console .consolebody:after{
+	content:'>';
+	display: block;
+	animation: flash  .5s infinite;
+
+}
+.status-light{
+	position: absolute;
+	left: 19px;
+	width: 10px;
+	height:10px;
+	border-radius: 50%;
+	background: #DDD;
+	top:18px;
+
+}
+.status-light.on{
+	background: #27ff00;
+	
+}
+@keyframes flash {
+	0% { opacity: 0; } 
+	100% { opacity: 1; }
+}
+</style>
+<div class="console">
+  <div class="consolehead">
+  	<span class="status-light <% if(status == '1'){ %>on<%}%>" ></span>
+    <p>Watch <%= console_name %></p>
+  </div>
+  <div class="consolebody">
+
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/static/js/socket.io.js"></script>
+<script type="text/javascript">
+	var socket = io.connect('http://192.168.3.36:3000');
+	var console_name = '<%= console_name %>';
+	socket.on('news_messages_<%= console_name %>', function(data){
+		if(console_name == data.console_name){
+			var console_box = document.querySelector('.consolebody');
+			console_box.innerHTML += '<p>> '+data.messages+'</p>';
+			console_box.scrollTop = console_box.scrollHeight;
+		}
+	});
+
+	socket.on('update_status_<%= console_name %>',function(data){
+		var status_light_class_list = document.querySelector('.status-light').classList;
+		if(data.status == 1){
+			status_light_class_list.add('on');
+		}
+		else{
+			status_light_class_list.remove("on");
+		}
+	});
+</script>
+
+
+<% include partial/footer %>

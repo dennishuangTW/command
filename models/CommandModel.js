@@ -31,6 +31,10 @@ exports.deleteByName = function(name){
    .write();
 }
 
+exports.isEmptyByName = function(name){
+   return db.isEmpty('name',name);
+}
+
 
 
 
